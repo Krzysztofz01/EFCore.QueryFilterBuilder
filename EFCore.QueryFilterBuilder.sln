@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.QueryFilterBuilder", "EFCore.QueryFilterBuilder\EFCore.QueryFilterBuilder.csproj", "{D5C8E190-B474-442A-B6C6-E74FDFCBD923}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.QueryFilterBuilder.Tests", "EFCore.QueryFilterBuilder.Tests\EFCore.QueryFilterBuilder.Tests.csproj", "{83FB1F9D-4B3C-40B9-B7B3-CE09BA95C2CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5C8E190-B474-442A-B6C6-E74FDFCBD923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5C8E190-B474-442A-B6C6-E74FDFCBD923}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5C8E190-B474-442A-B6C6-E74FDFCBD923}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5C8E190-B474-442A-B6C6-E74FDFCBD923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83FB1F9D-4B3C-40B9-B7B3-CE09BA95C2CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83FB1F9D-4B3C-40B9-B7B3-CE09BA95C2CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83FB1F9D-4B3C-40B9-B7B3-CE09BA95C2CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83FB1F9D-4B3C-40B9-B7B3-CE09BA95C2CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D0C212A0-D79C-4707-8979-C6E0FBCD98E8}
+	EndGlobalSection
+EndGlobal
