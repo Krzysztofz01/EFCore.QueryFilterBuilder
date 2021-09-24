@@ -16,7 +16,7 @@ An example of using `QueryFilterBuilder` in the override  `OnModelCreating()` me
 	        .HasQueryFilter(QueryFilterBuilder<Blog>
 	            .Create()
                 .AddFilter(b => b.Name == "Hello World")
-                .AddFilter(b => b.Posts == 20, _injectedService.ShouldApplyFilter()
+                .AddFilter(b => b.Posts == 20, _injectedService.ShouldApplyFilter())
                 .Build());
 
 		//As a last command, you can call Build(), 
