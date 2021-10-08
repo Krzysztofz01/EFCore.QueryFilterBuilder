@@ -18,18 +18,23 @@ namespace EFCore.QueryFilterBuilder
         /// <summary>
         /// Combine all active expressions into one expression. 
         /// </summary>
+        /// <exception cref="InvalidOperationException">The builder contains no filters.</exception>
         /// <returns>A LINQ predicate expression.</returns>
         public Expression<Func<TEntity, bool>> Build()
         {
             if (_queryFilters.Count == 0)
                 throw new InvalidOperationException("No expressions provided.");
 
-            if (_queryFilters.Count == 1)
-                return _queryFilters.Single().Value.Expression;
-
             var activeQueryFilters = _queryFilters
                 .Where(q => q.Value.Active)
-                .Select(q => q.Value.Expression);
+                .Select(q => q.Value.Expression)
+                .ToList();
+
+            if (activeQueryFilters.Count == 0)
+                return q => true;
+
+            if (activeQueryFilters.Count == 1)
+                return activeQueryFilters.Single();
 
             var exp = activeQueryFilters.First();
 
@@ -66,13 +71,45 @@ namespace EFCore.QueryFilterBuilder
         /// <summary>
         /// Adding a filter to a given query filter builder.
         /// </summary>
-        /// <param name="filterName">The name of the filter.</param>
+        /// <param name="filterName">The unique name of the filter.</param>
         /// <param name="expression">A LINQ predicate expression.</param>
         /// <param name="active">Indication of whether the filter should be applied, this parameter can be controlled by a service injected into DbContext.</param>
+        /// <exception cref="ArgumentException">Filter with given name already exists.</exception>
+        /// <exception cref="ArgumentNullException">Filter name is null.</exception>
         /// <returns>A QueryFilterBuilder instance to chain methods.</returns>
         public IQueryFilterBuilder<TEntity> AddFilter(string filterName, Expression<Func<TEntity, bool>> expression, bool active = true)
         {
             _queryFilters.Add(filterName, QueryFilter.Create(filterName, active, expression));
+            return this;
+        }
+
+        /// <summary>
+        /// Searching for a filter based on the given name and disabling it.
+        /// </summary>
+        /// <param name="filterName">The unique name of the filter.</param>
+        /// <exception cref="KeyNotFoundException">Filter with given name does not exist.</exception>
+        /// <exception cref="ArgumentNullException">Filter name is null.</exception>
+        /// <returns>A QueryFilterBuilder instance to chain methods.</returns>
+        public IQueryFilterBuilder<TEntity> DisableFilter(string filterName)
+        {
+            var queryFilter = _queryFilters[filterName];
+            
+            _queryFilters[filterName] = QueryFilter.Create(queryFilter.Name, false, queryFilter.Expression);
+            return this;
+        }
+
+        /// <summary>
+        /// Searching for a filter based on the given name and enabling it.
+        /// </summary>
+        /// <param name="filterName">The unique name of the filter.</param>
+        /// <exception cref="KeyNotFoundException">Filter with given name does not exist.</exception>
+        /// <exception cref="ArgumentNullException">Filter name is null.</exception>
+        /// <returnsA QueryFilterBuilder instance to chain methods.></returns>
+        public IQueryFilterBuilder<TEntity> EnableFilter(string filterName)
+        {
+            var queryFilter = _queryFilters[filterName];
+
+            _queryFilters[filterName] = QueryFilter.Create(queryFilter.Name, true, queryFilter.Expression);
             return this;
         }
 

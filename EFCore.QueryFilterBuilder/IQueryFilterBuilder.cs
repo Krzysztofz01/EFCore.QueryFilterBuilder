@@ -8,5 +8,7 @@ namespace EFCore.QueryFilterBuilder
         Expression<Func<TEntity, bool>> Build();
         IQueryFilterBuilder<TEntity> AddFilter(Expression<Func<TEntity, bool>> expression, bool active = true);
         IQueryFilterBuilder<TEntity> AddFilter(string filterName, Expression<Func<TEntity, bool>> expression, bool active = true);
+        IQueryFilterBuilder<TEntity> DisableFilter(string filterName);
+        IQueryFilterBuilder<TEntity> EnableFilter(string filterName);
     }
 }
