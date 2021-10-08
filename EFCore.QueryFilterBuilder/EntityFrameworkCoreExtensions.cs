@@ -9,7 +9,7 @@ namespace EFCore.QueryFilterBuilder
         /// </summary>
         /// <param name="queryFilterBuilder">The QueryFilterBuilder instance whose expression is to be applied to the given entity.</param>
         /// <returns>The same builder instance so that multiple configuration calls can be chained.</returns>
-        public static EntityTypeBuilder<TEntity> HasQueryFilter<TEntity>(this EntityTypeBuilder<TEntity> entityTypeBuilder, QueryFilterBuilder<TEntity> queryFilterBuilder) where TEntity : class
+        public static EntityTypeBuilder<TEntity> HasQueryFilter<TEntity>(this EntityTypeBuilder<TEntity> entityTypeBuilder, IQueryFilterBuilder<TEntity> queryFilterBuilder) where TEntity : class
         {
             return entityTypeBuilder.HasQueryFilter(queryFilterBuilder.Build());
         }

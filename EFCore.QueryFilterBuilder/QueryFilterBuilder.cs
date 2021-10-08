@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace EFCore.QueryFilterBuilder
 {
-    public class QueryFilterBuilder<TEntity> where TEntity : class
+    public class QueryFilterBuilder<TEntity> : IQueryFilterBuilder<TEntity> where TEntity : class
     {
         private readonly Dictionary<string, QueryFilter> _queryFilters;
 
         private QueryFilterBuilder() =>
             _queryFilters = new Dictionary<string, QueryFilter>();
+
+        #region IQueryFilterBuilder interface method implementation
 
         /// <summary>
         /// Combine all active expressions into one expression. 
@@ -52,7 +55,7 @@ namespace EFCore.QueryFilterBuilder
         /// <param name="expression">A LINQ predicate expression.</param>
         /// <param name="active">Indication of whether the filter should be applied, this parameter can be controlled by a service injected into DbContext.</param>
         /// <returns>A QueryFilterBuilder instance to chain methods.</returns>
-        public QueryFilterBuilder<TEntity> AddFilter(Expression<Func<TEntity, bool>> expression, bool active = true)
+        public IQueryFilterBuilder<TEntity> AddFilter(Expression<Func<TEntity, bool>> expression, bool active = true)
         {
             string key = Guid.NewGuid().ToString();
 
@@ -67,20 +70,41 @@ namespace EFCore.QueryFilterBuilder
         /// <param name="expression">A LINQ predicate expression.</param>
         /// <param name="active">Indication of whether the filter should be applied, this parameter can be controlled by a service injected into DbContext.</param>
         /// <returns>A QueryFilterBuilder instance to chain methods.</returns>
-        public QueryFilterBuilder<TEntity> AddFilter(string filterName, Expression<Func<TEntity, bool>> expression, bool active = true)
+        public IQueryFilterBuilder<TEntity> AddFilter(string filterName, Expression<Func<TEntity, bool>> expression, bool active = true)
         {
             _queryFilters.Add(filterName, QueryFilter.Create(filterName, active, expression));
             return this;
         }
 
+        #endregion
+
+        #region QueryFilterBuilder factory
+
         /// <summary>
         /// QueryFilterBuilder factory.
         /// </summary>
         /// <returns>A new QueryFilterBuilder instance.</returns>
-        public static QueryFilterBuilder<TEntity> Create()
+        public static IQueryFilterBuilder<TEntity> Create()
         {
             return new QueryFilterBuilder<TEntity>();
         }
+
+        #endregion
+
+        #region Hide System.Object inherited methods
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj) => base.Equals(obj);
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode() => base.GetHashCode();
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString() => base.ToString();
+
+        #endregion
+
+        #region QueryFilterBuilder private helper classes
 
         private class ReplaceParameterVisitor : ExpressionVisitor
         {
@@ -117,5 +141,7 @@ namespace EFCore.QueryFilterBuilder
                 };
             }
         }
+
+        #endregion
     }
 }
