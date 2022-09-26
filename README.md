@@ -8,18 +8,41 @@ The method of adding a filter has a bool parameter that indicates whether the fi
 
 ##  Example
 An example of using `QueryFilterBuilder` in the override  `OnModelCreating()` method in the `DbContext` class.
-
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
+```csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-	    //Fluent API
+	    // Fluent API (First way, specified multiple filters)
 	    modelBuilder.Entity<Blog>()
-	        .HasQueryFilter(QueryFilterBuilder<Blog>
-	            .Create()
-                .AddFilter(b => b.Name == "Hello World")
-                .AddFilter(b => b.Posts == 20, _injectedService.ShouldApplyFilter())
-                .Build());
+			.HasQueryFilters()
+				.AddFilter(b => b.Name == "Hello World")
+        		.AddFilter(b => b.Posts == 20, _injectedService.ShouldApplyFilter())
+            	.Build()
+			
+			// We can later chain other EntityTypeBuilder methods...
 
-		//As a last command, you can call Build(), 
-		//but you don't have to because it will be called automatically.
+
+
+
+		// Fluent API (Second way, un-specified multiple filters)
+		modelBuilder.Entity<Blog>()
+			.HasQueryFilter(b => b.Name == "Hello World")
+				.AddFilter(b => b.Posts == 20, _injectedService.ShouldApplyFilter())
+				.Build()
+
+			// We can later chain other EntityTypeBuilder methods...
+
+
+
+
+		// Fluent API (Third way, cached QueryFilterBuilder)
+		var queryFilterBuilder = QueryFilterBuilder<Blog>
+			.Create()
+			.AddFilter(b => b.Name == "Hello World")
+        	.AddFilter(b => b.Posts == 20, _injectedService.ShouldApplyFilter())
+
+		
+		modelBuilder.Entity<Blog>().HasQueryFilter(queryFilterBuilder)
+
+		// We can later chain other EntityTypeBuilder methods...
     }
-  
+```
