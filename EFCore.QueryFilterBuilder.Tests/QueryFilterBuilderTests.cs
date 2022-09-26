@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Xunit;
 
@@ -71,7 +72,40 @@ namespace EFCore.QueryFilterBuilder.Tests
             dbContext.Dispose();
         }
 
-        private void ProvideTestData(TestDbContext dbContext)
+        // Testing purposes DbContext
+        private class TestDbContext : DbContext
+        {
+            private readonly bool _status;
+
+            public virtual DbSet<Blog> Blogs { get; set; }
+
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Blog>()
+                    .HasQueryFilters()
+                    .AddFilter(d => d.Name == "Hello World")
+                    .AddFilter(d => d.Posts == 20, _status)
+                    .Build();
+            }
+
+            public TestDbContext(DbContextOptions<TestDbContext> opt, bool status) : base(opt) { _status = status; }
+        }
+
+        // Testing purposes Entity
+        public class Blog
+        {
+            public Blog() =>
+                Id = Guid.NewGuid();
+
+            [Key]
+            public Guid Id { get; set; }
+            public string Name { get; set; }
+            public int Posts { get; set; }
+            public string About { get; set; }
+        }
+
+        // Testing purposes mock-up data
+        private static void ProvideTestData(TestDbContext dbContext)
         {
             dbContext.Blogs.AddRange(new Blog[]
             {

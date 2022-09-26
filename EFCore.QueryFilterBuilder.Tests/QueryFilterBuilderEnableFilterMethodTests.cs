@@ -45,7 +45,7 @@ namespace EFCore.QueryFilterBuilder.Tests
             dbContext.Dispose();
         }
 
-        //Testing DbContext
+        // Testing purposes DbContext
         private class TestDbContext : DbContext
         {
             private readonly bool _enableFilter;
@@ -59,26 +59,24 @@ namespace EFCore.QueryFilterBuilder.Tests
                 if (_enableFilter)
                 {
                     modelBuilder.Entity<Blog>()
-                    .HasQueryFilter(QueryFilterBuilder<Blog>
-                        .Create()
+                        .HasQueryFilters()
                         .AddFilter(filterName, b => b.Name == "Hello World", false)
                         .EnableFilter(filterName)
-                        .Build());
+                        .Build();
                 }
                 else
                 {
                     modelBuilder.Entity<Blog>()
-                    .HasQueryFilter(QueryFilterBuilder<Blog>
-                        .Create()
+                        .HasQueryFilters()
                         .AddFilter(filterName, b => b.Name == "Hello World", false)
-                        .Build());
+                        .Build();
                 }
             }
 
             public TestDbContext(DbContextOptions<TestDbContext> opt, bool enableFilter) : base(opt) { _enableFilter = enableFilter; }
         }
 
-        //Testing entity
+        // Testing purposes Entity
         private class Blog
         {
             public Blog() =>
@@ -91,7 +89,8 @@ namespace EFCore.QueryFilterBuilder.Tests
             public string About { get; set; }
         }
 
-        private void InitializeData(TestDbContext context)
+        // Testing purposes mock-up data
+        private static void InitializeData(TestDbContext context)
         {
             context.AddRange(new Blog[]
             {
