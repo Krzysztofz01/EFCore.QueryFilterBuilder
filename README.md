@@ -6,6 +6,8 @@ This library solves a certain problem shown in the image below. This library add
 
 The method of adding a filter has a bool parameter that indicates whether the filter should be used or not. Thanks to this, any service injected into DbContext can control which filters should be applied in a given scope.
 
+The **EFCore.QueryFilterBuilder** tags are related to the underlying Microsoft.EntityFrameworkCore dependency version.
+
 ##  Example
 An example of using `QueryFilterBuilder` in the override  `OnModelCreating()` method in the `DbContext` class.
 ```csharp
@@ -21,8 +23,6 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 			// We can later chain other EntityTypeBuilder methods...
 
 
-
-
 		// Fluent API (Second way, un-specified multiple filters)
 		modelBuilder.Entity<Blog>()
 			.HasQueryFilter(b => b.Name == "Hello World")
@@ -30,8 +30,6 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 				.Build()
 
 			// We can later chain other EntityTypeBuilder methods...
-
-
 
 
 		// Fluent API (Third way, cached QueryFilterBuilder)
